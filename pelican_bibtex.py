@@ -75,20 +75,28 @@ def add_publications(generator):
         pdf = entry.fields.get('pdf', None)
         slides = entry.fields.get('slides', None)
         poster = entry.fields.get('poster', None)
+        code = entry.fields.get('code', None)
+        type = entry.type
 
         #render the bibtex string for the entry
         bib_buf = StringIO()
         bibdata_this = BibliographyData(entries={key: entry})
         Writer().write_stream(bibdata_this, bib_buf)
         text = formatted_entry.text.render(html_backend)
-
+        
+        # TODO: use dict of dicts
         publications.append((key,
                              year,
                              text,
                              bib_buf.getvalue(),
                              pdf,
                              slides,
-                             poster))
+                             poster,
+                             code,
+                             type))
+    # sort by date
+    publications = [pub for pub in sorted(publications,
+        key=lambda x: x[1], reverse=True)]
 
     generator.context['publications'] = publications
 
