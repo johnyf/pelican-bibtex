@@ -76,6 +76,9 @@ def add_publications(generator):
         slides = entry.fields.get('slides', None)
         poster = entry.fields.get('poster', None)
         code = entry.fields.get('code', None)
+        session = entry.fields.get('session', None)
+        index = entry.fields.get('index', None)
+        index = int(index)
         type = entry.type
 
         #render the bibtex string for the entry
@@ -86,6 +89,7 @@ def add_publications(generator):
         
         # TODO: use dict of dicts
         publications.append((key,
+                             index,
                              year,
                              text,
                              bib_buf.getvalue(),
@@ -93,10 +97,13 @@ def add_publications(generator):
                              slides,
                              poster,
                              code,
-                             type))
+                             type,
+                             session))
     # sort by date
     publications = [pub for pub in sorted(publications,
         key=lambda x: x[1], reverse=True)]
+    for p in publications:
+        print((p[:2]))
 
     generator.context['publications'] = publications
 
