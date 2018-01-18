@@ -80,7 +80,7 @@ def add_publications(generator):
         index = entry.fields.get('index', None)
         school = entry.fields.get('school', None)
         index = int(index)
-        type = entry.type
+        type_ = entry.type
 
         #render the bibtex string for the entry
         bib_buf = StringIO()
@@ -98,7 +98,7 @@ def add_publications(generator):
                              slides,
                              poster,
                              code,
-                             type,
+                             type_,
                              session,
                              school))
     # sort by date
