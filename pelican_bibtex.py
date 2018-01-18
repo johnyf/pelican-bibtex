@@ -12,6 +12,7 @@ websites.
 # Unlicense (see UNLICENSE for details)
 
 import logging
+import re
 logger = logging.getLogger(__name__)
 
 from pelican import signals
@@ -46,6 +47,7 @@ def add_publications(generator):
         from pybtex.database import BibliographyData, PybtexError
         from pybtex.backends import html
         from pybtex.style.formatting import plain
+        from pybtex import richtext
     except ImportError:
         logger.warn('`pelican_bibtex` failed to load dependency `pybtex`')
         return
@@ -66,7 +68,15 @@ def add_publications(generator):
     html_backend = html.Backend()
     formatted_entries = plain_style.format_entries(bibdata_all.entries.values())
 
+    def filter_str(s):
+        if not isinstance(s, richtext.String):
+            return s
+        s.value = re.sub(r'(?<!\\)}', '', s.value)
+        s.value = re.sub(r'(?<!\\){', '', s.value)
+        return s
+
     for formatted_entry in formatted_entries:
+        formatted_entry.text.parts = [filter_str(s) for s in formatted_entry.text.parts]
         key = formatted_entry.key
         entry = bibdata_all.entries[key]
         year = entry.fields.get('year')
