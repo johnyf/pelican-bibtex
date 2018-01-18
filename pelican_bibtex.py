@@ -78,6 +78,7 @@ def add_publications(generator):
         code = entry.fields.get('code', None)
         session = entry.fields.get('session', None)
         index = entry.fields.get('index', None)
+        school = entry.fields.get('school', None)
         index = int(index)
         type = entry.type
 
@@ -98,7 +99,8 @@ def add_publications(generator):
                              poster,
                              code,
                              type,
-                             session))
+                             session,
+                             school))
     # sort by date
     publications = [pub for pub in sorted(publications,
         key=lambda x: x[1], reverse=True)]
